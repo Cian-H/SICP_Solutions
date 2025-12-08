@@ -1,0 +1,47 @@
+local nas_MiniDeps, MiniDeps = pcall(require, "mini.deps")
+if has_MiniDeps then
+    MiniDeps.setup({ path = { package = path_package } })
+    MiniDeps.later(function()
+        MiniDeps.add({ source = "Olical/conjure" })
+        MiniDeps.add({ source = "hiphish/rainbow-delimiters.nvim" })
+    end)
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "racket", "scheme" },
+    callback = function(args)
+        local root_dir = vim.fs.dirname(vim.fs.find({ "info.rkt", ".git" }, { upward = true })[1])
+
+        if not root_dir then
+            root_dir = vim.fs.dirname(vim.api.nvim_buf_get_name(args.buf))
+        end
+
+        vim.lsp.start({
+            name = "racket_langserver",
+            cmd = { "racket", "--lib", "racket-langserver" },
+            root_dir = root_dir,
+        })
+    end,
+})
+
+local has_conform, conform = pcall(require, "conform")
+if has_conform then
+    conform.setup({
+        format_on_save = {
+            timeout_ms = 3000,
+            lsp_fallback = true,
+        },
+    })
+
+    conform.formatters_by_ft.scheme = { "racketfmt" }
+    conform.formatters_by_ft.racket = { "racketfmt" }
+end
+
+local has_wk, wk = pcall(require, "which-key")
+if has_wk then
+    wk.add({
+        { "<leader>E", desc = "[E]val", icon = { icon = "", color = "purple" } },
+    })
+end
+
+vim.notify("SICP Local Config Loaded", vim.log.levels.INFO)
