@@ -31,7 +31,10 @@
 
   enterShell = "raco pkg install --auto fmt langsever-racket sicp";
 
-  languages.racket.enable = true;
+  languages = {
+    racket.enable = true;
+    rust.enable = true;
+  };
 
   scripts.scheme.exec = ''
     if [ -z "$1" ]; then

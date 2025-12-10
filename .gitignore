@@ -17,3 +17,6 @@ compiled/
 *.bak
 \#*
 .\#*
+
+# local neovim config
+.nvim
