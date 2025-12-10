@@ -4,6 +4,23 @@ if has_MiniDeps then
     MiniDeps.later(function()
         MiniDeps.add({ source = "Olical/conjure" })
         MiniDeps.add({ source = "hiphish/rainbow-delimiters.nvim" })
+        MiniDeps.add({
+            source = "eraserhd/parinfer-rust",
+            hooks = {
+                -- Run cargo build when installed or updated
+                post_install = function(params)
+                    vim.notify("Building parinfer-rust...", vim.log.levels.INFO)
+                    vim.fn.system("cd " .. params.path .. " && cargo build --release")
+                    vim.notify("Parinfer build complete", vim.log.levels.INFO)
+                end,
+
+                post_checkout = function(params)
+                    vim.notify("Updating parinfer-rust...", vim.log.levels.INFO)
+                    vim.fn.system("cd " .. params.path .. " && cargo build --release")
+                    vim.notify("Parinfer update complete", vim.log.levels.INFO)
+                end,
+            },
+        })
     end)
 end
 
