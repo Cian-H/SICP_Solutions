@@ -78,10 +78,11 @@ vim.api.nvim_create_autocmd("FileType", {
 
 local has_conform, conform = pcall(require, "conform")
 if has_conform then
+    conform.formatters.schemat = { command = "schemat" }
     conform.setup({
         format_on_save = { timeout_ms = 3000, lsp_fallback = true },
     })
-    conform.formatters_by_ft.scheme = { "racketfmt" }
+    conform.formatters_by_ft.scheme = { "schemat" }
     conform.formatters_by_ft.racket = { "racketfmt" }
 end
 
