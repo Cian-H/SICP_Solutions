@@ -12,6 +12,7 @@
     pkgs.glib
     pkgs.libedit
     pkgs.libjpeg
+    pkgs.mitscheme
     pkgs.pango
     pkgs.racket
     pkgs.schemat
