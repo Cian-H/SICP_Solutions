@@ -30,7 +30,7 @@
     ];
   };
 
-  enterShell = "raco pkg install --auto fmt langsever-racket sicp";
+  enterShell = "raco pkg install --auto fmt langsever-racket lazy sicp";
 
   languages = {
     racket.enable = true;
