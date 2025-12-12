@@ -40,6 +40,8 @@
   scripts.scheme.exec = ''
     if [ -z "$1" ]; then
       racket -l sicp -i
+    elif [ "$1" = "-i" ] && [ -n "$2" ]; then
+      racket -l sicp -f "$2" -i
     else
       racket -l sicp -f "$1"
     fi
