@@ -1,5 +1,7 @@
 (define (sqrt x)
-  (sqrt-iter (improve 1.0 x) x))
+  (if (< x 0)
+    (error "Cannot calculate square root of negative number" x)
+    (sqrt-iter (improve 1.0 x) x)))
 
 (define (sqrt-iter guess x)
   (define next_guess (improve guess x))
