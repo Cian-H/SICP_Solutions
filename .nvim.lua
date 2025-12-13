@@ -1,34 +1,14 @@
+local has_rd, rd = pcall(require, "rainbow-delimiters")
+
+if has_rd then
+    rd.toggle()
+end
+
 local has_MiniDeps, MiniDeps = pcall(require, "mini.deps")
 
 if has_MiniDeps then
     local local_deps_path = vim.fn.getcwd() .. "/.nvim/deps"
     MiniDeps.setup({ path = { package = local_deps_path } })
-
-    MiniDeps.add({ source = "hiphish/rainbow-delimiters.nvim" })
-    require("rainbow-delimiters.setup").setup({
-        strategy = {
-            [""] = "rainbow-delimiters.strategy.global",
-            vim = "rainbow-delimiters.strategy.local",
-        },
-        query = {
-            [""] = "rainbow-delimiters",
-            lua = "rainbow-blocks",
-        },
-        priority = {
-            [""] = 110,
-            lua = 210,
-        },
-        highlight = {
-            "RainbowDelimiterRed",
-            "RainbowDelimiterYellow",
-            "RainbowDelimiterBlue",
-            "RainbowDelimiterOrange",
-            "RainbowDelimiterGreen",
-            "RainbowDelimiterViolet",
-            "RainbowDelimiterCyan",
-        },
-    })
-
     MiniDeps.now(function()
         MiniDeps.add({ source = "Olical/conjure" })
         MiniDeps.add({
