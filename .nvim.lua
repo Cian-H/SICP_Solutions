@@ -68,7 +68,7 @@ end
 
 local has_wk, wk = pcall(require, "which-key")
 if has_wk then
-    wk.add({ { "<leader>E", desc = "[E]val", icon = { icon = "", color = "purple" } } })
+    wk.add({ { "<leader>e", desc = "[E]val", icon = { icon = "", color = "purple" } } })
 end
 
 vim.notify("SICP Local Config Loaded", vim.log.levels.INFO)
