@@ -1,12 +1,8 @@
 (define (even? n)
   (= (remainder n 2) 0))
 
-(define (fast-mult x n)
-
-  (define (iter b i a)
-    (cond
-      ((= i 0) a)
-      ((even? i) (iter (+ b b) (/ i 2) a))
-      (else (iter b (- i 1) (+ a b)))))
-
-  (iter x n 0))
+(define (fast-mult a b)
+  (cond
+    ((= b 0) 0)
+    ((even? b) (+ (fast-mult a (/ b 2)) (fast-mult a (/ b 2))))
+    (else (+ a (fast-mult a (- b 1))))))
