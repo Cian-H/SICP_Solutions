@@ -1,5 +1,3 @@
-(load "lib/math/arithmetic.scm")
-
 (define (gcd a b)
   (if (zero? b)
     a
@@ -12,9 +10,3 @@
     ((> (square test-divisor) n) n)
     ((divides? test-divisor n) test-divisor)
     (else (find-divisor n (+ test-divisor 1)))))
-
-(define (divides? a b)
-  (zero? (remainder b a)))
-
-(define (prime?) n
-  (= n (smallest-divisor n)))

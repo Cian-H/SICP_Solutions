@@ -1,6 +1,3 @@
-(define (even? n)
-  (zero? (remainder n 2)))
-
 (define (average x y)
   (/ (+ x y) 2))
 

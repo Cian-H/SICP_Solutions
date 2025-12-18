@@ -1,5 +1,3 @@
-(load "lib/math/arithmetic.scm")
-
 (define (sqrt x)
   (if (< x 0)
     (error "Cannot calculate square root of negative number" x))
