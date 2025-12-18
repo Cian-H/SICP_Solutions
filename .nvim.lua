@@ -7,7 +7,7 @@ end
 local has_MiniDeps, MiniDeps = pcall(require, "mini.deps")
 
 if has_MiniDeps then
-    local local_deps_path = vim.fn.getcwd() .. "/.nvim/deps"
+    local local_deps_path = vim.fn.fnamemodify(debug.getinfo(1, "S").source:sub(2), ":h") .. "/.nvim/deps"
     MiniDeps.setup({ path = { package = local_deps_path } })
     MiniDeps.now(function()
         MiniDeps.add({ source = "Olical/conjure" })
