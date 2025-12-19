@@ -4,6 +4,17 @@
 (define (even? n)
   (divides? 2 n))
 
+(define (is-close? a b)
+  (define (is-close-tolerance? a b rel-tol abs-tol)
+    (let ((diff (abs (- a b)))
+          (mag-a (abs a))
+          (mag-b (abs b)))
+      (<= diff
+        (max (* rel-tol (max mag-a mag-b))
+          abs-tol))))
+
+  (is-close-tolerance? a b default-rel-tol default-abs-tol))
+
 (define (prime? n)
   (= n (smallest-divisor n)))
 
