@@ -1,6 +1,22 @@
-(define (integral f a b dx)
+(define (integral f a b n)
 
-  (define (add-dx x)
-    (+ x dx))
+  (define h (/ (- b a) n))
 
-  (* (sum f (+ a (/ dx 1.0)) add-dx b) dx))
+  (define (series-prefix k)
+    (cond
+      ((or (zero? k) (= k n)) 1)
+      ((even? k) 2)
+      (else 4)))
+
+  (define (yk k)
+    (f (+ a (* k h))))
+
+  (define (series k)
+    (* (series-prefix k) (yk k)))
+
+  (define (next k)
+    (+ k 1))
+
+  (*
+    (/ h 3)
+    (sum series 0 next n)))
