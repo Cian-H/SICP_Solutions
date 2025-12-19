@@ -2,3 +2,5 @@
 (load "lib/math/arithmetic.scm")
 (load "lib/math/factorisation.scm")
 (load "lib/math/roots.scm")
+(load "lib/math/series.scm")
+(load "lib/math/calculus.scm")
