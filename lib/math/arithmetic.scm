@@ -37,7 +37,7 @@
   (if (< x 0)
     (error "Cannot calculate square root of negative number" x))
 
-  (fixed-point (average-damp (lambda (y) (/ x y))) 1.0))
+  (newtons-method (lambda (y) (- (square y) x)) 1.0))
 
 (define (cubert x)
   (fixed-point
