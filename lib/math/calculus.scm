@@ -2,21 +2,19 @@
 
   (define h (/ (- b a) n))
 
-  (define (series-prefix k)
-    (cond
-      ((or (zero? k) (= k n)) 1)
-      ((even? k) 2)
-      (else 4)))
-
   (define (yk k)
     (f (+ a (* k h))))
 
-  (define (series k)
-    (* (series-prefix k) (yk k)))
+  (define (series-component coeff)
+    (lambda (k)
+      (* coeff (yk k))))
 
   (define (next k)
-    (+ k 1))
+    (+ k 2))
 
   (*
     (/ h 3)
-    (sum series 0 next n)))
+    (+ (sum (series-component 4) 1 next (- n 1))
+      (sum (series-component 2) 2 next (- n 1))
+      (yk 0)
+      (yk n))))
