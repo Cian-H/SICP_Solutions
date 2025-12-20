@@ -25,3 +25,6 @@
         (try next))))
 
   (try first-guess))
+
+(define (fixed-point-of-transform g transform guess)
+  (fixed-point (transform g) guess))
