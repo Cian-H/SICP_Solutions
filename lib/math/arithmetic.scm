@@ -39,5 +39,8 @@
 
   (fixed-point-of-transform (lambda (y) (- (square y) x)) newton-transform 1.0))
 
+(define (nth-root x n)
+  (fixed-point-of-transform (lambda (y) (- (expt y n) x)) newton-transform 1.0))
+
 (define (cubert x)
-  (fixed-point-of-transform (lambda (y) (- (* y y y) x)) newton-transform 1.0))
+  (nth-root x 3))
