@@ -16,15 +16,17 @@
       ((and (negative? b-value) (positive? a-value)) (search f b a))
       (else (error "Values are not of opposite sign" a b)))))
 
+(define (iterative-improve check-fn improve-fn)
+  (lambda (guess)
+    (define (try guess-n)
+      (let ((next (improve-fn guess-n)))
+        (if (check-fn guess-n next)
+          next
+          (try next))))
+    (try guess)))
+
 (define (fixed-point f first-guess)
-
-  (define (try guess)
-    (let ((next (f guess)))
-      (if (is-close? guess next)
-        next
-        (try next))))
-
-  (try first-guess))
+  ((iterative-improve is-close? f) first-guess))
 
 (define (fixed-point-of-transform g transform guess)
   (fixed-point (transform g) guess))
