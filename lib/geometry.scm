@@ -1,0 +1,5 @@
+(load "lib/math.scm")
+(load "lib/geometry/point.scm")
+(load "lib/geometry/segment.scm")
+(load "lib/geometry/polygon.scm")
+(load "lib/geometry/rectangle.scm")

@@ -42,11 +42,10 @@
   (define (expmod base exp m)
     (cond
       ((= exp 0) 1)
-      ((even? exp
-          (let ((x (expmod base (/ exp 2) m)))
-            (if (= x 0)
-              0
-              (check-nontrivial-sqrt x m)))))
+      ((even? exp) (let ((x (expmod base (/ exp 2) m)))
+                    (if (= x 0)
+                      0
+                      (check-nontrivial-sqrt x m))))
       (else
         (let ((x (expmod base (- exp 1) m)))
           (if (= x 0)

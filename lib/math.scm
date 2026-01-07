@@ -1,5 +1,6 @@
 (load "lib/math/constants.scm")
 (load "lib/math/predicates.scm")
+(load "lib/math/combinators.scm")
 (load "lib/math/composition.scm")
 (load "lib/math/arithmetic.scm")
 (load "lib/math/factorisation.scm")
