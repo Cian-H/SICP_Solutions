@@ -38,7 +38,7 @@
       acc
       (all-segments? (cdr st) (and acc (segment? (car st))))))
 
-  (if (not (pair? p))
+  (if (not (pair? s))
     #f
     (let* ((ps (points-polygon s))
            (ss (segments-polygon s))
