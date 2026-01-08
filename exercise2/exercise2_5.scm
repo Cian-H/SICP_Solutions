@@ -1,0 +1,30 @@
+(define (cons x y)
+  (* (expt 2 x) (expt 3 y)))
+
+(define (car z)
+  (define (iter i acc)
+    (if (even? i)
+      (iter (/ i 2) (+ acc 1))
+      acc))
+  (iter z 0))
+
+(define (cdr z)
+  (define (iter i acc)
+    (if (= (remainder i 3) 0)
+      (iter (/ i 3) (+ acc 1))
+      acc))
+  (iter z 0))
+
+(define (bool->string b)
+  (if b "true" "false"))
+
+(define n 2)
+(define d 8)
+(define r (cons n d))
+
+(newline)
+(display (string-append "r =" (number->string r) "; n=" (number->string n) "; d=" (number->string d) "; (car r)=>" (number->string (car r)) "; (cdr r)=>" (number->string (cdr r))))
+(newline)
+(display (string-append "(= (car r) n)? " (bool->string (= (car r) n))))
+(newline)
+(display (string-append "(= (cdr r) d)? " (bool->string (= (cdr r) d))))
