@@ -2,6 +2,11 @@
 
 (define (make-interval a b) (sort-interval (cons a b)))
 
+(define (make-interval-center-percent c p)
+  (if (zero? c)
+    (error "Cannot construct an interval from a percentage where centerpoint is 0"))
+  (make-interval-center-width c (abs (* c p))))
+
 (define (predicate-selector f)
   (lambda (i)
     (let ((i0 (car i))
