@@ -1,3 +1,9 @@
+(define (pos-or-zero? x)
+  (not (negative? x)))
+
+(define (neg-or-zero? x)
+  (not (positive? x)))
+
 (define (divides? a b)
   (zero? (remainder b a)))
 
