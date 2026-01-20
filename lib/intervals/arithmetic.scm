@@ -1,7 +1,7 @@
 (define (add-interval x y)
   (make-interval
-    (+ (lower-bound-interval x) (lower-bound y))
-    (+ (upper-bound-interval x) (upper-bound y))))
+    (+ (lower-bound-interval x) (lower-bound-interval y))
+    (+ (upper-bound-interval x) (upper-bound-interval y))))
 
 (define (sub-interval x y)
   (add-interval
