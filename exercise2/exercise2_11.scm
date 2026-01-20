@@ -9,19 +9,15 @@
 (define lower-bound (predicate-selector <))
 (define upper-bound (predicate-selector >))
 
+(define (interval->string i)
+  (let ((i0 (number->string (lower-bound i)))
+        (i1 (number->string (upper-bound i))))
+    (string-append "[" i0 ", " i1 "]")))
+
 (define (add-interval x y)
   (make-interval
     (+ (lower-bound x) (lower-bound y))
     (+ (upper-bound x) (upper-bound y))))
-
-(define (mul-interval x y)
-  (let ((p1 (* (lower-bound x) (lower-bound y)))
-        (p2 (* (lower-bound x) (upper-bound y)))
-        (p3 (* (upper-bound x) (lower-bound y)))
-        (p4 (* (upper-bound x) (upper-bound y))))
-    (make-interval
-      (min p1 p2 p3 p4)
-      (max p1 p2 p3 p4))))
 
 (define (spans-zero? x)
   (<= (* (lower-bound x) (upper-bound x)) 0))
@@ -45,28 +41,30 @@
 (define (width-interval x)
   (/ (- (upper-bound x) (lower-bound x)) 2.0))
 
+(define (pos-or-zero? x)
+  (not (negative? x)))
+
+(define (neg-or-zero? x)
+  (not (positive? x)))
+
 (define (mul-interval x y)
-  (let ((xl (lower-bound x))
-        (xh (upper-bound x))
-        (yl (lower-bound y))
-        (yh (upper-bound y)))
+  (let ((x0 (lower-bound x))
+        (x1 (upper-bound x))
+        (y0 (lower-bound y))
+        (y1 (upper-bound y)))
     (cond
-      ((>= xl 0
-          (cond
-            ((>= yl 0) (make-interval (* xl yl) (* xh yh)))
-            ((<= yh 0) (make-interval (* xh yl) (* xl yh)))
-            (else (make-interval (* xh yl) (* xh yh))))))
-      ((<= xh 0
-          (cond
-            ((>= yl 0) (make-interval (* xl yh) (* xh yl)))
-            ((<= yh 0) (make-interval (* xh yh) (* xl yl)))
-            (else (make-interval (* xl yh) (* xl yl))))))
-      (else
-        (cond
-          ((>= yl 0) (make-interval (* xl yh) (* xh yh)))
-          ((<= yh 0) (make-interval (* xh yl) (* xl yl)))
-          (else (make-interval (min (* xl yh) (* xh yl))
-                 (max (* xl yl) (* xh yh)))))))))
+      ((pos-or-zero? x0) (cond
+                           ((pos-or-zero? y0) (make-interval (* x0 y0) (* x1 y1)))
+                           ((neg-or-zero? y1) (make-interval (* x1 y0) (* x0 y1)))
+                           (else (make-interval (* x1 y0) (* x1 y1)))))
+      ((neg-or-zero? x1) (cond
+                           ((pos-or-zero? y0) (make-interval (* x0 y1) (* x1 y0)))
+                           ((neg-or-zero? y1) (make-interval (* x1 y1) (* x0 y0)))
+                           (else (make-interval (* x0 y1) (* x0 y0)))))
+      (else (cond
+              ((pos-or-zero? y0) (make-interval (* x0 y1) (* x1 y1)))
+              ((neg-or-zero? y1) (make-interval (* x1 y0) (* x0 y0)))
+              (else (make-interval (min (* x0 y1) (* x1 y0)) (max (* x0 y0) (* x1 y1)))))))))
 
 ;;; ------------------------------------------------------------------
 ;;; Test Suite: Verifying all 9 cases
@@ -77,73 +75,39 @@
 (newline)
 
 ;; Define representative intervals
-(define pos (make-interval 10 20)) ; Positive: [10, 20]
+(define pos (make-interval 10 20))   ; Positive: [ 10,  20]
 (define neg (make-interval -20 -10)) ; Negative: [-20, -10]
-(define spn (make-interval -10 20)) ; Spans:    [-10, 20]
+(define spn (make-interval -10 20))  ; Spans:    [-10,  20]
 
-(define (print-mul x y label)
-  (let ((res (mul-interval x y)))
-    (display label)
-    (display ": ")
-    (display "[")
-    (display (lower-bound x))
-    (display ",")
-    (display (upper-bound x))
-    (display "] * ")
-    (display "[")
-    (display (lower-bound y))
-    (display ",")
-    (display (upper-bound y))
-    (display "] = ")
-    (display "[")
-    (display (lower-bound res))
-    (display ",")
-    (display (upper-bound res))
-    (display "]")
-    (newline)))
+(define (print-op f op-label)
+  (lambda (x y label)
+    (let* ((z (f x y))
+           (xs (interval->string x))
+           (ys (interval->string y))
+           (zs (interval->string z)))
+      (display (string-append label ": " xs " " op-label " " ys " = " zs))
+      (newline))))
 
-;; 1. Pos * Pos
-(print-mul pos pos "1. P * P")
-;; Expect: [100, 400]
+(define print-mul (print-op mul-interval "*"))
+(define print-div (print-op div-interval "/"))
 
-;; 2. Pos * Neg
-(print-mul pos neg "2. P * N")
-;; Expect: [-400, -100]
-
-;; 3. Pos * Span
-(print-mul pos spn "3. P * S")
-;; Expect: [-200, 400]
-
-;; 4. Neg * Pos
-(print-mul neg pos "4. N * P")
-;; Expect: [-400, -100]
-
-;; 5. Neg * Neg
-(print-mul neg neg "5. N * N")
-;; Expect: [100, 400]
-
-;; 6. Neg * Span
-(print-mul neg spn "6. N * S")
-;; Expect: [-400, 200]
-
-;; 7. Span * Pos
-(print-mul spn pos "7. S * P")
-;; Expect: [-200, 400]
-
-;; 8. Span * Neg
-(print-mul spn neg "8. S * N")
-;; Expect: [-400, 200]
-
-;; 9. Span * Span (The complex case)
-(print-mul spn spn "9. S * S")
-;; Expect: Min(-200, -200) = -200. Max(100, 400) = 400. -> [-200, 400]
+(print-mul pos pos "1. P * P") ; [100, 400]
+(print-mul pos neg "2. P * N") ; [-400, -100]
+(print-mul pos spn "3. P * S") ; [-200, 400]
+(print-mul neg pos "4. N * P") ; [-400, -100]
+(print-mul neg neg "5. N * N") ; [100, 400]
+(print-mul neg spn "6. N * S") ; [-400, 200]
+(print-mul spn pos "7. S * P") ; [-200, 400]
+(print-mul spn neg "8. S * N") ; [-400, 200]
+(print-mul spn spn "9. S * S") ; [-200, 400]
 
 (newline)
 (display "~~~ Division Safety Check (from 2.10) ~~~")
 (newline)
-(display "Division by zero-span interval (expect error or handling):")
+(print-div pos pos "1. P / P")
+(print-div pos neg "2. P / N")
+(print-div neg pos "3. N / P")
+(print-div neg neg "4. N / N")
+(display "Division by zero-span interval (expect error: \"Interval y cannot span zero!\"):")
 (newline)
-;; Uncomment the line below to trigger the error
-;; (div-interval pos spn)
-(display "Error logic preserved.")
-(newline)
+(print-div pos spn "5. P / S")
