@@ -2,6 +2,9 @@
 
 (define (make-interval a b) (sort-interval (cons a b)))
 
+(define (make-interval-center-width c w)
+  (make-interval (- c w) (+ c w)))
+
 (define (make-interval-center-percent c p)
   (if (zero? c)
     (error "Cannot construct an interval from a percentage where centerpoint is 0"))
@@ -20,6 +23,3 @@
   (let ((i0 (number->string (lower-bound-interval i)))
         (i1 (number->string (upper-bound-interval i))))
     (string-append "[" i0 ", " i1 "]")))
-
-(define (make-interval-center-width c w)
-  (make-interval (- c w) (+ c w)))

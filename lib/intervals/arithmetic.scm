@@ -29,11 +29,10 @@
              ((neg-or-zero? y1) (make-interval (* x1 y0) (* x0 y0)))
              (else (make-interval (min (* x0 y1) (* x1 y0)) (max (* x0 y0) (* x1 y1)))))))))
 
+(define (recip-interval i)
+  (make-interval (/ 1.0 (upper-bound-interval i)) (/ 1.0 (lower-bound-interval i))))
+
 (define (div-interval x y)
   (if (spans-zero? y)
     (error "Interval y cannot span zero!")
-    (mul-interval
-      x
-      (make-interval
-        (/ 1.0 (upper-bound-interval y))
-        (/ 1.0 (lower-bound-interval y))))))
+    (mul-interval x (recip-interval y))))
