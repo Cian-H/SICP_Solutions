@@ -88,7 +88,7 @@
 ; B / A = [9.600767754318618, 9.7705078125] (0.8762461594017741%)
 
 ;;; So, if we repeat a variable in any case where division occurs we suddenly get errors that can
-;;; snowball out of control. This is why `par1` is better!
+;;; snowball out of control. This is why `par2` is better!
 
 ;;; The question is: how do we change the `div-interval` function to fix this without a significant
 ;;; redesign of the function?
