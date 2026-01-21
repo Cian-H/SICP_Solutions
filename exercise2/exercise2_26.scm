@@ -1,0 +1,15 @@
+(define x (list 1 2 3))
+(define y (list 4 5 6))
+
+;;; Before verifying, I want to write what i expect to see here:
+; (append x y) => (1 2 3 4 5 6)
+; (cons x y) => ((1 2 3) 4 5 6)
+; (list x y) => ((1 2 3) (4 5 6))
+
+(newline)
+(display (append x y)) ; => (1 2 3 4 5 6)
+(newline)
+(display (cons x y)) ; => ((1 2 3) 4 5 6)
+(newline)
+(display (list x y)) ; => ((1 2 3) (4 5 6))
+(newline)
