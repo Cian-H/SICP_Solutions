@@ -18,5 +18,8 @@ compiled/
 \#*
 .\#*
 
+# local scratchpad
+scratch.scm
+
 # local neovim config
 .nvim
