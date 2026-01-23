@@ -1,0 +1,46 @@
+(load "lib/functools.scm")
+
+(define (test-procedure proc label m n)
+  (display "-------------------------------------------")
+  (newline)
+  (display "Testing procedure: ")
+  (display label)
+  (newline)
+  (display "-------------------------------------------")
+  (newline)
+
+  (define (test m n)
+    (display "Testing procedure for m = ")
+    (display m)
+    (display ", n = ")
+    (display n)
+    (newline)
+    (display "Result: ")
+    (display (proc m n))
+    (newline)
+    (display "-------------------------------------------")
+    (newline))
+
+  (define (iter i j)
+    (cond
+      ((> j n) #t)
+      ((<= i m) (begin (test i j) (iter (+ i 1) j)))
+      ((> i m) (iter 3 (+ j 1)))
+      (else (error "This should never occur!"))))
+
+  (iter 3 3))
+
+(define (unique-triples n)
+  (flatmap (lambda (i)
+            (flatmap (lambda (j)
+                      (map (lambda (k) (list i j k))
+                        (enumerate-interval 1 (- j 1))))
+              (enumerate-interval 1 (- i 1))))
+    (enumerate-interval 1 n)))
+
+(define (s-sum-triples n s)
+  (filter (lambda (x) (= s (apply + x))) (unique-triples n)))
+
+(newline)
+(test-procedure s-sum-triples "s-sum-triples" 8 8)
+(newline)

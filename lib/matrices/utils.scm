@@ -1,0 +1,28 @@
+(define (display-matrix m)
+  (define (pad-string str len)
+    (string-append str (make-string (- len (string-length str)) #\space)))
+
+  (if (null? m)
+    (display "[]")
+    (let* ((str-m (map (lambda (row) (map number->string row)) m))
+           (cols (transpose str-m))
+           (col-widths (map (lambda (col) (apply max (map string-length col))) cols)))
+      (display "[\n")
+      (for-each
+        (lambda (row)
+          (display "  [ ")
+          (let loop ((items row) (widths col-widths))
+            (cond ((null? items) #t)
+              (else
+                (let ((s (car items))
+                      (w (car widths))
+                      (is-last? (null? (cdr items))))
+                  (display (pad-string s w))
+                  (if (not is-last?)
+                    (display ", ")
+                    (display " "))
+                  (loop (cdr items) (cdr widths))))))
+          (display "],\n"))
+        str-m)
+
+      (display "]"))))
