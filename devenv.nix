@@ -37,6 +37,16 @@
     rust.enable = true;
   };
 
+  scripts.scheme-draw.exec = ''
+    if [ -z "$1" ]; then
+      racket -l sicp-pict -i
+    elif [ "$1" = "-i" ] && [ -n "$2" ]; then
+      racket -l sicp-pict -f "$2" -i
+    else
+      racket -l sicp-pict -f "$1"
+    fi
+  '';
+
   scripts.scheme.exec = ''
     if [ -z "$1" ]; then
       racket -l sicp -i

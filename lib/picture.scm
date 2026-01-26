@@ -1,0 +1,6 @@
+(load "lib/picture/shared-errors.scm")
+(load "lib/picture/coordinates.scm")
+(load "lib/picture/vectors.scm")
+(load "lib/picture/frames.scm")
+(load "lib/picture/splits.scm")
+(load "lib/picture/tilings.scm")
