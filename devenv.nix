@@ -41,7 +41,7 @@
     if [ -z "$1" ]; then
       racket -l sicp-pict -i
     elif [ "$1" = "-i" ] && [ -n "$2" ]; then
-      racket -l sicp-pict -f "$2" -i
+      racket -i -l sicp-pict -f "$2"
     else
       racket -l sicp-pict -f "$1"
     fi
@@ -51,7 +51,7 @@
     if [ -z "$1" ]; then
       racket -l sicp -i
     elif [ "$1" = "-i" ] && [ -n "$2" ]; then
-      racket -l sicp -f "$2" -i
+      racket -i -l sicp -f "$2"
     else
       racket -l sicp -f "$1"
     fi
