@@ -40,8 +40,12 @@
   scripts.scheme-draw.exec = ''
     if [ -z "$1" ]; then
       racket -l sicp-pict -i
+    elif [ "$1" = "--gui" ]; then
+      drracket
     elif [ "$1" = "-i" ] && [ -n "$2" ]; then
       racket -i -l sicp-pict -f "$2"
+    elif [ "$1" = "--gui" ] && [ -n "$2" ]; then
+      drracket "$2"
     else
       racket -l sicp-pict -f "$1"
     fi
