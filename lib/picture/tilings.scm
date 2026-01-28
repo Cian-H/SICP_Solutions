@@ -6,5 +6,5 @@
 
 (define (flipped-pairs painter) (square-of-four identity flip-vert identity flip-vert))
 
-(define (square limit painter n)
+(define (square-limit painter n)
   ((square-of-four flip-horiz identity rotate180 flip-vert) (corner-split painter n)))
