@@ -15,6 +15,11 @@
 (define (take l n)
   (if (or (null? l) (= n 0)) '() (cons (car l) (take (cdr l) (- n 1)))))
 
+(define (take-while pred l)
+  (if (or (null? l) (not (pred (car l))))
+    '()
+    (cons (car l) (take-while pred (cdr l)))))
+
 (define (remove i s)
   (filter (lambda (x) (not (= x i))) s))
 
