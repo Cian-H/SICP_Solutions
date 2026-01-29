@@ -12,6 +12,14 @@
       acc))
   (iter (- end 1) '()))
 
+(define (list-index pred l)
+  (define (iter lt i)
+    (cond
+      ((null? lt) #f)
+      ((pred (car lt)) i)
+      (else (iter (cdr lt) (+ i 1)))))
+  (iter l 0))
+
 (define (take l n)
   (if (or (null? l) (= n 0)) '() (cons (car l) (take (cdr l) (- n 1)))))
 
