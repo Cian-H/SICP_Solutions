@@ -77,6 +77,5 @@ in {
 
   languages = {
     racket.enable = true;
-    rust.enable = true;
   };
 }

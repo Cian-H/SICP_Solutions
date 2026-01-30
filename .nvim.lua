@@ -11,21 +11,7 @@ if has_MiniDeps then
     MiniDeps.setup({ path = { package = local_deps_path } })
     MiniDeps.now(function()
         MiniDeps.add({ source = "Olical/conjure" })
-        MiniDeps.add({
-            source = "eraserhd/parinfer-rust",
-            hooks = {
-                post_install = function(params)
-                    vim.notify("Building parinfer-rust...", vim.log.levels.INFO)
-                    os.execute("cd " .. params.path .. " && cargo build --release > build.log 2>&1")
-                    vim.notify("Parinfer build complete", vim.log.levels.INFO)
-                end,
-                post_checkout = function(params)
-                    vim.notify("Updating parinfer-rust...", vim.log.levels.INFO)
-                    os.execute("cd " .. params.path .. " && cargo build --release > build.log 2>&1")
-                    vim.notify("Parinfer update complete", vim.log.levels.INFO)
-                end,
-            },
-        })
+        MiniDeps.add({ source = "julienvincent/nvim-paredit" })
 
         local has_ts, parsers = pcall(require, "nvim-treesitter.parsers")
         if has_ts and not parsers.has_parser("scheme") then
@@ -55,6 +41,52 @@ vim.api.nvim_create_autocmd("FileType", {
         })
     end,
 })
+
+local has_paredit, paredit = pcall(require, "nvim-paredit")
+if has_paredit then
+    paredit.setup({
+        indent = { enabled = true },
+        keys = {
+            ["<localleader>w"] = {
+                function()
+                    paredit.cursor.place_cursor(
+                        paredit.wrap.wrap_element_under_cursor("( ", ")"),
+                        { placement = "inner_start", mode = "insert" }
+                    )
+                end,
+                "Wrap element insert head",
+            },
+            ["<localleader>W"] = {
+                function()
+                    paredit.cursor.place_cursor(
+                        paredit.wrap.wrap_element_under_cursor("(", ")"),
+                        { placement = "inner_end", mode = "insert" }
+                    )
+                end,
+                "Wrap element insert tail",
+            },
+            ["<localleader>i"] = {
+                function()
+                    paredit.cursor.place_cursor(
+                        paredit.wrap.wrap_enclosing_form_under_cursor("( ", ")"),
+                        { placement = "inner_start", mode = "insert" }
+                    )
+                end,
+                "Wrap form insert head",
+            },
+
+            ["<localleader>I"] = {
+                function()
+                    paredit.cursor.place_cursor(
+                        paredit.wrap.wrap_enclosing_form_under_cursor("(", ")"),
+                        { placement = "inner_end", mode = "insert" }
+                    )
+                end,
+                "Wrap form insert tail",
+            },
+        },
+    })
+end
 
 local has_conform, conform = pcall(require, "conform")
 if has_conform then
