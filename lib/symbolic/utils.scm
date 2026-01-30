@@ -1,0 +1,17 @@
+(define (lookup-maker l label)
+  (lambda (s)
+    (define (iter l)
+      (let ((lh (car l))
+            (lt (cdr l)))
+        (cond
+          ((null? lh) (error (string-concat "Requested key" (symbol->string s) "not found in " label)))
+          ((eq? s (car lh)) (cdr lh))
+          (else (iter lt)))))
+    (iter l)))
+
+(define (list-index-last pred lst)
+  (define (iter l idx last-match)
+    (cond ((null? l) last-match)
+      ((pred (car l)) (iter (cdr l) (+ idx 1) idx))
+      (else (iter (cdr l) (+ idx 1) last-match))))
+  (iter lst 0 #f))

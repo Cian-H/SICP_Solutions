@@ -1,0 +1,8 @@
+(load "lib/functools.scm")
+(load "lib/symbolic/utils.scm")
+(load "lib/symbolic/ops.scm")
+(load "lib/symbolic/var.scm")
+(load "lib/symbolic/constants.scm")
+(load "lib/symbolic/expr.scm")
+(load "lib/symbolic/simplify.scm")
+(load "lib/symbolic/calculus.scm")
