@@ -45,6 +45,25 @@
       exec racket ...$args
     }
   '';
+
+  scheme-langserver = pkgs.stdenv.mkDerivation rec {
+    pname = "scheme-langserver";
+    version = "2.0.3";
+
+    src = pkgs.fetchurl {
+      url = "https://github.com/ufo5260987423/scheme-langserver/releases/download/${version}/scheme-langserver-x86_64-linux-glibc";
+      hash = "sha256:8cc5c6c5027dbaa14e51ad7e801e5390bc561c8a04e5653b9d63f35cf6f72c49";
+    };
+    dontUnpack = true;
+    nativeBuildInputs = [pkgs.autoPatchelfHook];
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out/bin
+      cp $src $out/bin/scheme-langserver
+      chmod +x $out/bin/scheme-langserver
+      runHook postInstall
+    '';
+  };
 in {
   packages = [
     pkgs.cairo
@@ -60,6 +79,7 @@ in {
     pkgs.schemat
     pkgs.stylua
     schemeScript
+    scheme-langserver
   ];
 
   env = {
@@ -73,7 +93,7 @@ in {
     ];
   };
 
-  enterShell = "raco pkg install --auto fmt langsever-racket lazy sicp";
+  enterShell = "raco pkg install --auto fmt racket-langsever lazy sicp";
 
   languages = {
     racket.enable = true;
