@@ -28,6 +28,11 @@
     '()
     (cons (car l) (take-while pred (cdr l)))))
 
+(define (append-reverse rev tail)
+  (if (null? rev)
+    tail
+    (append-reverse (cdr rev) (cons (car rev) tail))))
+
 (define (remove i s)
   (filter (lambda (x) (not (= x i))) s))
 
@@ -47,10 +52,22 @@
 
 (define (split l n)
   (define (iter i l1 l2)
-    (if (< i n)
-      (iter (+ i 1) (cdr l1) (cons (car l1) l2))
-      (cons (reverse l2) l1)))
+    (cond
+      ((null? (cdr l1)) (cons (car l1) l2))
+      ((< i n) (iter (+ i 1) (cdr l1) (cons (car l1) l2)))
+      (else (cons (reverse l2) l1))))
+  (if (not (pair? l)) (error "Split only accepts pairs!"))
   (iter 0 l '()))
+
+;; A specialised algoritm called the "tortoise and hare" algorithm for spltting lists in half
+(define (split-halves lst)
+  (define (iter slow fast acc)
+    (if (or (null? fast) (null? (cdr fast)))
+      (cons (reverse acc) slow)
+      (iter (cdr slow)
+        (cddr fast)
+        (cons (car slow) acc))))
+  (iter lst lst '()))
 
 (define (wrap-slide l n)
   (let ((split-list (split l n)))
