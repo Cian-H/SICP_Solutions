@@ -18,6 +18,9 @@ compiled/
 \#*
 .\#*
 
+# Scheme
+.scheme-langserver.log
+
 # local scratchpad
 scratch.scm
 
