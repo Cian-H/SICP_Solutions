@@ -12,13 +12,13 @@
     ((null? l) l)
     ((not (pair? l)) (error "`sort` only accepts pairs!"))
     ((null? (cdr l)) l)
-    ((null? (cddr l)) (if (pred (car l) (cadr l)) (list (cadr l) (car l)) l))
+    ((null? (cddr l)) (if (pred (car l) (cadr l)) l (list (cadr l) (car l))))
     (else
       (let* ((parts (split-halves l))
              (left (car parts))
              (right (cdr parts))
-             (left-sorted (sort left))
-             (right-sorted (sort right)))
+             (left-sorted (sort left pred))
+             (right-sorted (sort right pred)))
         (merge left-sorted right-sorted '())))))
 
 (define (sort-ascending l) (sort l <=)) ; Note: must be <= for stable sort
