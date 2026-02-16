@@ -39,6 +39,9 @@
 (define (drop l n)
   (if (or (null? l) (= n 0)) l (drop (cdr l) (- n 1))))
 
+(define (last l)
+  (if (null? (cdr l)) (car l) (last (cdr l))))
+
 (define (transpose mat)
   (accumulate-n cons '() mat))
 

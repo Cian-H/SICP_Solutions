@@ -1,3 +1,4 @@
+(load "lib/functools.scm")
 (load "lib/sort/smalln.scm")
 (load "lib/sort/insertionsort.scm")
 (load "lib/sort/mergesort.scm")
