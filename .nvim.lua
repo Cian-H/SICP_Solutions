@@ -52,6 +52,11 @@ local function start_scheme_lsp(args)
     vim.lsp.start({
         name = "scheme_langserver",
         cmd = { "scheme-langserver" },
+        setup = {
+            flags = {
+                debounce_text_changes = 150,
+            },
+        },
         root_dir = root_dir,
     })
 end
