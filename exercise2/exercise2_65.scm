@@ -1,28 +1,38 @@
+(#%require (prefix racket: racket/base))
 (load "lib/functools.scm")
 (load "lib/sort.scm")
 
 ; Originally, i thought exercise 2.62 was asking for a btree, but i later realised that exercise
 ; wanted a binary search instead. So, i've kept my binary search tree implementation from 2.62
 ; and i'm re-using it here instead of the implementation in SICP.
+(define bstree-height-cache (racket:make-weak-hasheq))
+
 (define (bstree-node val left right)
-  (if (and (null? left) (null? right))
-      (cons val '())
-      (cons val (cons left right))))
+  (let ((node (if (and (null? left) (null? right))
+                  (cons val '())
+                  (cons val (cons left right)))))
+    (racket:hash-set! bstree-height-cache node (+ 1 (max (bstree-height left) (bstree-height right))))
+    node))
 
 (define (bstree-root tree) (car tree))
 (define (bstree-branches tree) (cdr tree))
 
 (define (bstree-left-branch tree)
-  (if (null? (cdr tree)) '() (cadr tree)))
+  (if (null? (bstree-branches tree)) '() (cadr tree)))
 
 (define (bstree-right-branch tree)
-  (if (null? (cdr tree)) '() (cddr tree)))
+  (if (null? (bstree-branches tree)) '() (cddr tree)))
 
 (define (bstree-height tree)
-  (if (null? tree)
-      0
-      (+ 1 (max (bstree-height (bstree-left-branch tree))
-                (bstree-height (bstree-right-branch tree))))))
+  (cond
+    ((null? tree) 0)
+    ((racket:hash-has-key? bstree-height-cache tree)
+     (racket:hash-ref bstree-height-cache tree))
+    (else
+     (let ((h (+ 1 (max (bstree-height (bstree-left-branch tree))
+                        (bstree-height (bstree-right-branch tree))))))
+       (racket:hash-set! bstree-height-cache tree h)
+       h))))
 
 (define (bstree-partial elts n)
   (if (= n 0)
@@ -30,12 +40,12 @@
       (let* ((left-size (quotient (- n 1) 2))
              (left-result (bstree-partial elts left-size))
              (left-tree (car left-result))
-             (non-left-elts (cdr left-result))
+             (non-left-elts (bstree-branches left-result))
              (this-entry (car non-left-elts))
              (right-size (- n (+ left-size 1)))
-             (right-result (bstree-partial (cdr non-left-elts) right-size))
+             (right-result (bstree-partial (bstree-branches non-left-elts) right-size))
              (right-tree (car right-result))
-             (remaining-elts (cdr right-result)))
+             (remaining-elts (bstree-branches right-result)))
         (cons (bstree-node this-entry left-tree right-tree) remaining-elts))))
 
 ; Add rotations and balancing, otherwise managing a bstree will become a pain in the ass
@@ -67,34 +77,38 @@
 
 (define (bstree-balance tree)
   (if (null? tree)
-      '()
-      (let ((bf (- (bstree-height (bstree-left-branch tree))
-                   (bstree-height (bstree-right-branch tree)))))
+      tree
+      (let* ((left (bstree-left-branch tree))
+             (right (bstree-right-branch tree))
+             (bf (- (bstree-height left) (bstree-height right))))
         (cond
           ((> bf 1)
-           (if (< (bstree-height (bstree-left-branch tree))
-                  (bstree-height (bstree-right-branch (bstree-left-branch tree))))
-               (bstree-rotate-right (bstree-node (bstree-root tree)
-                                                 (bstree-rotate-left (bstree-left-branch tree))
-                                                 (bstree-right-branch tree)))
-               (bstree-rotate-right tree)))
+           (let ((LL (bstree-height (bstree-left-branch left)))
+                 (LR (bstree-height (bstree-right-branch left))))
+             (if (< LL LR)
+                 (bstree-rotate-right
+                   (bstree-node (bstree-root tree) (bstree-rotate-left left) right))
+                 (bstree-rotate-right tree))))
           ((< bf -1)
-           (if (> (bstree-height (bstree-right-branch tree))
-                  (bstree-height (bstree-left-branch (bstree-right-branch tree))))
-               (bstree-rotate-left (bstree-node (bstree-root tree)
-                                                (bstree-left-branch tree)
-                                                (bstree-rotate-right (bstree-right-branch tree))))
-               (bstree-rotate-left tree)))
+           (let ((RL (bstree-height (bstree-left-branch right)))
+                 (RR (bstree-height (bstree-right-branch right))))
+             (if (> RL RR)
+                 (bstree-rotate-left
+                   (bstree-node (bstree-root tree) left (bstree-rotate-right right)))
+                 (bstree-rotate-left tree))))
           (else tree)))))
+
+(define (bstree-join x left right)
+  (bstree-balance (bstree-node x left right)))
 
 (define (list->bstree sorted-list)
   (if (null? sorted-list)
-      '()
+      sorted-list
       (car (bstree-partial sorted-list (length sorted-list)))))
 
 (define (bstree->list tree)
   (cond
-    ((null? tree) '())
+    ((null? tree) tree)
     ((null? (cdr tree)) (list (car tree)))
     (else
       (let ((root (bstree-root tree))
@@ -116,16 +130,50 @@
           (right (bstree-right-branch tree)))
        (cond
          ((= x root) tree) ;; if x = root just return tree, to avoid duplicates
-         ((< x root) (bstree-balance (bstree-node root (bstree-insert left x) right)))
-         (else (bstree-balance (bstree-node root left (bstree-insert right x))))))))
+         ((< x root) (bstree-join root (bstree-insert left x) right))
+         (else (bstree-join root left (bstree-insert right x)))))))
 
 (define (bstree-append tree l)
   (if (null? l)
     tree
     (bstree-append (bstree-insert tree (car l)) (cdr l))))
 
-(define (bstree-merge tree other-tree)
-  (bstree-append tree (bstree->list other-tree)))
+(define (bstree-split tree k)
+  (if (null? tree)
+      (cons '() '())
+      (let* ((root  (bstree-root tree))
+             (left  (bstree-left-branch tree))
+             (right (bstree-right-branch tree))
+             (lt-root (< k root))
+             (split-branch (if lt-root left right))
+             (split-result (bstree-split split-branch k))
+             (unmerged-small (car split-result))
+             (unmerged-big (cdr split-result))
+             (small (if lt-root unmerged-small (bstree-join root left unmerged-small)))
+             (big (if lt-root (bstree-join root unmerged-big right) unmerged-big)))
+        (cons small big))))
+
+(define (bstree-merge t1 t2)
+  (cond
+    ((null? t1) t2)
+    ((null? t2) t1)
+    ((= (bstree-root t1) (bstree-root t2))
+     (bstree-join (bstree-root t1)
+                  (bstree-merge (bstree-left-branch t1) (bstree-left-branch t2))
+                  (bstree-merge (bstree-right-branch t1) (bstree-right-branch t2))))
+    (else
+     (let* ((sized-trees (if (< (bstree-height t1) (bstree-height t2)) (cons t1 t2) (cons t2 t1)))
+            (small (car sized-trees))
+            (big (cdr sized-trees))
+            (pivot (bstree-root big))
+            (big-left (bstree-left-branch big))
+            (big-right (bstree-right-branch big))
+            (split-result (bstree-split small pivot))
+            (small-lt (car split-result))
+            (small-gt (cdr split-result)))
+       (bstree-join pivot
+                    (bstree-merge small-lt big-left)
+                    (bstree-merge small-gt big-right))))))
 
 (define (bstree-contains? tree x)
   (cond
