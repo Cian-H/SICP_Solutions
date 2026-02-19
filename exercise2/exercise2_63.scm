@@ -1,0 +1,8 @@
+(define (tree->list-1 tree)
+  (if (null? tree)
+    '()
+    (append (tree->list-1 (left-branch tree))
+      (cons (entry tree)
+        (tree->list-1 (right-branch tree))))))
+
+(define (tree->list-2 tree))
