@@ -1,0 +1,11 @@
+(define bstree-tag-symbol 'bstree)
+(define bstree-end 'bstree-end)
+(define bstree-empty (cons bstree-tag-symbol bstree-end))
+
+(define (bstree-node val left right)
+  (let* ((bare-node (if (and (bstree-empty? left) (bstree-empty? right))
+                     (cons val bstree-end)
+                     (cons val (cons left right))))
+         (node (cons 'bstree bare-node)))
+    (bstree-set-height node (+ 1 (max (bstree-height left) (bstree-height right))))
+    node))
