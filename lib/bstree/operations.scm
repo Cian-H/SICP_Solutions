@@ -15,12 +15,12 @@
 
 (define (bstree-insert tree x)
   (if (bstree-empty? tree)
-    (bstree-node x bstree-empty) ;; if tree empty return a leaf: (x)
+    (bstree-node x bstree-empty bstree-empty)
     (let ((root (bstree-root tree))
           (left (bstree-left-branch tree))
           (right (bstree-right-branch tree)))
       (cond
-        ((= x root) tree) ;; if x = root just return tree, to avoid duplicates
+        ((= x root) tree)
         ((< x root) (bstree-join root (bstree-insert left x) right))
         (else (bstree-join root left (bstree-insert right x)))))))
 
