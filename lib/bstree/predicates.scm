@@ -4,8 +4,11 @@
 (define (bstree-end? tree)
   (eq? tree bstree-end))
 
+(define (bstree-notree? tree)
+  (bstree-end? (bstree-tree tree)))
+
 (define (bstree-empty? tree)
-  (eq? tree bstree-empty))
+  (and (bstree? tree) (bstree-notree? tree)))
 
 (define (bstree-branches? tree)
   (and
@@ -28,9 +31,9 @@
     (else
       (let ((root (bstree-root tree)))
         (cond
-          ((= x root) #t)
+          ((equal? x root) #t)
           ((null? (bstree-branches tree)) #f)
           (else
-            (if (< x root)
+            (if ((bstree-predicate tree) x root)
               (bstree-contains? (bstree-left-branch tree) x)
               (bstree-contains? (bstree-right-branch tree) x))))))))

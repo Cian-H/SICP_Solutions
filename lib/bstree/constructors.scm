@@ -1,10 +1,12 @@
-(define (bstree . l)
-  (bstree-balance (list->bstree (unique (sort-ascending l)))))
+(define (bstree pred . l)
+  (bstree-balance (list->bstree pred (unique (sort l pred)))))
 
-(define (list->bstree sorted-list)
+(define (bstree-make-empty pred) (cons bstree-tag-symbol (cons pred bstree-end)))
+
+(define (list->bstree pred sorted-list)
   (if (null? sorted-list)
     bstree-empty
-    (car (bstree-partial sorted-list (length sorted-list)))))
+    (car (bstree-partial pred sorted-list (length sorted-list)))))
 
 (define (bstree->list tree)
   (cond
