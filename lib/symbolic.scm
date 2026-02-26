@@ -1,3 +1,4 @@
+(load "lib/safe-load.scm")
 (load "lib/functools.scm")
 (load "lib/symbolic/utils.scm")
 (load "lib/symbolic/ops.scm")

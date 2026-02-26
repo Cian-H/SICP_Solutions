@@ -1,3 +1,4 @@
+(load "lib/safe-load.scm")
 (load "lib/math.scm")
 (load "lib/geometry/point.scm")
 (load "lib/geometry/segment.scm")

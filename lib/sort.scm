@@ -1,3 +1,4 @@
+(load "lib/safe-load.scm")
 (load "lib/functools.scm")
 (load "lib/sort/smalln.scm")
 (load "lib/sort/insertionsort.scm")

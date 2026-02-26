@@ -1,3 +1,4 @@
+(load "lib/safe-load.scm")
 (load "lib/math.scm")
 (load "lib/intervals/arithmetic.scm")
 (load "lib/intervals/interval.scm")
