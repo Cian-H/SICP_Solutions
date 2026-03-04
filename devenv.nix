@@ -5,8 +5,9 @@
   inputs,
   ...
 }: let
+  unstablePkgs = inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.system};
   schemeScript = pkgs.writeScriptBin "sicp-scheme" ''
-    #!${pkgs.nushell}/bin/nu
+    #!${unstablePkgs.nushell}/bin/nu
 
     # A unified wrapper for Racket SICP
     def main [
@@ -73,7 +74,7 @@ in {
     pkgs.libedit
     pkgs.libjpeg
     pkgs.mitscheme
-    pkgs.nushell
+    unstablePkgs.nushell
     pkgs.pango
     pkgs.racket
     pkgs.schemat

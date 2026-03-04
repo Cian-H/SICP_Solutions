@@ -64,7 +64,11 @@
 (define div-interval-old div-interval)
 (define (div-interval x y)
   (if (spans-zero? y)
-    (error "Interval y cannot span zero!")
+    (begin
+      (newline)
+      (display "Interval y cannot span zero!")
+      (newline)
+      #f)
     (div-interval-old x y)))
 
 ; Now lets repeat the tests

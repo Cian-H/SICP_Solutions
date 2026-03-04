@@ -24,7 +24,11 @@
 
 (define (div-interval x y)
   (if (spans-zero? y)
-    (error "Interval y cannot span zero!")
+    (begin
+      (newline)
+      (display "Interval y cannot span zero!")
+      (newline)
+      #f)
     (mul-interval
       x
       (make-interval
@@ -54,17 +58,17 @@
         (y1 (upper-bound y)))
     (cond
       ((pos-or-zero? x0) (cond
-                           ((pos-or-zero? y0) (make-interval (* x0 y0) (* x1 y1)))
-                           ((neg-or-zero? y1) (make-interval (* x1 y0) (* x0 y1)))
-                           (else (make-interval (* x1 y0) (* x1 y1)))))
+                          ((pos-or-zero? y0) (make-interval (* x0 y0) (* x1 y1)))
+                          ((neg-or-zero? y1) (make-interval (* x1 y0) (* x0 y1)))
+                          (else (make-interval (* x1 y0) (* x1 y1)))))
       ((neg-or-zero? x1) (cond
-                           ((pos-or-zero? y0) (make-interval (* x0 y1) (* x1 y0)))
-                           ((neg-or-zero? y1) (make-interval (* x1 y1) (* x0 y0)))
-                           (else (make-interval (* x0 y1) (* x0 y0)))))
+                          ((pos-or-zero? y0) (make-interval (* x0 y1) (* x1 y0)))
+                          ((neg-or-zero? y1) (make-interval (* x1 y1) (* x0 y0)))
+                          (else (make-interval (* x0 y1) (* x0 y0)))))
       (else (cond
-              ((pos-or-zero? y0) (make-interval (* x0 y1) (* x1 y1)))
-              ((neg-or-zero? y1) (make-interval (* x1 y0) (* x0 y0)))
-              (else (make-interval (min (* x0 y1) (* x1 y0)) (max (* x0 y0) (* x1 y1)))))))))
+             ((pos-or-zero? y0) (make-interval (* x0 y1) (* x1 y1)))
+             ((neg-or-zero? y1) (make-interval (* x1 y0) (* x0 y0)))
+             (else (make-interval (min (* x0 y1) (* x1 y0)) (max (* x0 y0) (* x1 y1)))))))))
 
 ;;; ------------------------------------------------------------------
 ;;; Test Suite: Verifying all 9 cases
@@ -75,16 +79,16 @@
 (newline)
 
 ;; Define representative intervals
-(define pos (make-interval 10 20))   ; Positive: [ 10,  20]
+(define pos (make-interval 10 20)) ; Positive: [ 10,  20]
 (define neg (make-interval -20 -10)) ; Negative: [-20, -10]
-(define spn (make-interval -10 20))  ; Spans:    [-10,  20]
+(define spn (make-interval -10 20)) ; Spans:    [-10,  20]
 
 (define (print-op f op-label)
   (lambda (x y label)
     (let* ((z (f x y))
            (xs (interval->string x))
            (ys (interval->string y))
-           (zs (interval->string z)))
+           (zs (if z (interval->string z) "ERROR!")))
       (display (string-append label ": " xs " " op-label " " ys " = " zs))
       (newline))))
 
