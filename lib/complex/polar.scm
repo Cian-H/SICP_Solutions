@@ -1,25 +1,22 @@
-(define (complex-polar-from-mag-ang r a) (attach-tag 'polar (cons r a)))
+(define (complex-install-polar-package)
+  (define (from-mag-ang r a) (cons r a))
+  (define (from-real-imag x y)
+    (cons (sqrt (+ (square x) (square y))) (atan y x)))
 
-(define (complex-polar? z)
-  (eq? (type-tag z) 'polar))
+  (define (magnitude z) (car z))
+  (define (angle z) (cdr z))
 
-(define (complex-polar-unwrap z)
-  (if (complex-polar? z)
-    (contents z)
-    (error "`complex-polar-*` procedures only accept polar complex numbers!")))
+  (define (real-part z)
+    (* (magnitude z) (cos (angle z))))
+  (define (imag-part z)
+    (* (magnitude z) (sin (angle z))))
 
-(define (complex-polar-magnitude z) (car (complex-polar-unwrap z)))
-(define (complex-polar-angle z) (cdr (complex-polar-unwrap z)))
+  (define (wrap x) (type-wrap 'polar x))
 
-(define (complex-polar-real-part z)
-  (* (complex-polar-magnitude z) (cos (complex-polar-angle z))))
-
-(define (complex-polar-imag-part z)
-  (* (complex-polar-magnitude z) (sin (complex-polar-angle z))))
-
-(define (complex-polar-from-real-imag x y)
-  (attach-tag
-    'polar
-    (cons
-      (sqrt (+ (square x) (square y)))
-      (atan y x))))
+  (put 'from-mag-ang '(polar) (lambda (x y) (wrap (from-mag-ang x y))))
+  (put 'from-real-imag '(polar) (lambda (x y) (wrap (from-real-imag x y))))
+  (put 'real-part '(polar) real-part)
+  (put 'imag-part '(polar) imag-part)
+  (put 'magnitude '(polar) magnitude)
+  (put 'angle '(polar) angle)
+  'ok)

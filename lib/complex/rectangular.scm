@@ -1,25 +1,22 @@
-(define (complex-rectangular-from-real-imag x y) (attach-tag 'rectangular (cons x y)))
+(define (complex-install-rectangular-package)
+  (define (from-real-imag x y) (cons x y))
+  (define (from-mag-ang r a)
+    (cons (* r (cos a)) (* r (sin a))))
 
-(define (complex-rectangular? z)
-  (eq? (type-tag z) 'rectangular))
+  (define (real-part z) (car z))
+  (define (imag-part z) (cdr z))
 
-(define (complex-rectangular-unwrap z)
-  (if (complex-rectangular? z)
-    (contents z)
-    (error "`complex-rectangular-*` procedures only accept rectangular complex numbers!")))
+  (define (magnitude z)
+    (sqrt (+ (square (real-part z)) (square (imag-part z)))))
+  (define (angle z)
+    (atan (imag-part z) (real-part z)))
 
-(define (complex-rectangular-real-part z) (car (complex-rectangular-unwrap z)))
-(define (complex-rectangular-imag-part z) (cdr (complex-rectangular-unwrap z)))
+  (define (wrap x) (type-wrap 'rectangular x))
 
-(define (complex-rectangular-magnitude z)
-  (sqrt (+ (square (complex-rectangular-real-part z)) (square (complex-rectangular-imag-part z)))))
-
-(define (complex-rectangular-angle z)
-  (atan (complex-rectangular-imag-part z) (complex-rectangular-real-part z)))
-
-(define (complex-rectangular-from-mag-ang r a)
-  (attach-tag
-    'rectangular
-    (cons
-      (* r (cos a))
-      (* r (sin a)))))
+  (put 'from-real-imag '(retangular) (lambda (x y) (wrap (from-real-imag x y))))
+  (put 'from-mag-ang '(retangular) (lambda (x y) (wrap (from-mag-ang x y))))
+  (put 'real-part '(rectangular) real-part)
+  (put 'imag-part '(rectangular) imag-part)
+  (put 'magnitude '(rectangular) magnitude)
+  (put 'angle '(rectangular) angle)
+  'ok)
