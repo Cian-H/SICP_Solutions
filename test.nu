@@ -3,7 +3,7 @@
 # This script quickly tests to ensure that none of my changes to libraries break older exercises
 
 # Load ignored paths
-let testignore = open ./testignore
+let testignore = open ./.testignore
 | from csv --noheaders
 | get column0
 | path expand
