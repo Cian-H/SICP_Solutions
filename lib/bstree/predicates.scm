@@ -18,12 +18,12 @@
 (define (bstree-left-branch? tree)
   (and
     (bstree-branches? tree)
-    (not (null? (bstree-left-branch tree)))))
+    (not (bstree-empty? (bstree-left-branch tree)))))
 
 (define (bstree-right-branch? tree)
   (and
     (bstree-branches? tree)
-    (not (null? (bstree-right-branch tree)))))
+    (not (bstree-empty? (bstree-right-branch tree)))))
 
 (define (bstree-contains? tree x)
   (cond

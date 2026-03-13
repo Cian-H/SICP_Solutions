@@ -2,16 +2,16 @@
 (define (bstree-predicate tree) (cadr tree))
 (define (bstree-tree tree) (cddr tree))
 (define (bstree-root tree) (car (bstree-tree tree)))
-(define (bstree-branches tree) (cdr (bstree-tree tree)))
+(define (bstree-branches tree) (cddr (bstree-tree tree)))
 
 (define (bstree-left-branch tree)
   (if (bstree-branches? tree)
-    (cadr (bstree-tree tree))
+    (car (bstree-branches tree))
     (bstree-make-empty (bstree-predicate tree))))
 
 (define (bstree-right-branch tree)
   (if (bstree-branches? tree)
-    (cddr (bstree-tree tree))
+    (cdr (bstree-branches tree))
     (bstree-make-empty (bstree-predicate tree))))
 
 (define (bstree-lookup key key-getter tree)

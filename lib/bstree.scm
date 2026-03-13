@@ -1,4 +1,3 @@
-(#%require (prefix racket: racket/base))
 (load "lib/safe-load.scm")
 (load "lib/functools.scm")
 (load "lib/sort.scm")
