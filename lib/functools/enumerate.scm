@@ -8,3 +8,5 @@
   (if (> low high)
     nil
     (cons low (enumerate-interval (+ low 1) high))))
+
+(define (flatten t) (enumerate-tree t))
