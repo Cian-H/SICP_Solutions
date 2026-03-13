@@ -17,7 +17,9 @@
 
 (define (bstree-split tree k)
   (if (bstree-empty? tree)
-    (cons bstree-empty bstree-empty)
+    (cons
+      (bstree-make-empty (bstree-predicate tree))
+      (bstree-make-empty (bstree-predicate tree)))
     (let ((root (bstree-root tree))
           (pred (bstree-predicate tree))
           (left (bstree-left-branch tree))

@@ -16,7 +16,7 @@
 (define (bstree-insert tree x)
   (let ((pred (bstree-predicate tree)))
     (if (bstree-empty? tree)
-      (bstree-node x pred bstree-empty (bstree-make-empty pred))
+      (bstree-node x pred (bstree-make-empty pred) (bstree-make-empty pred))
       (let ((root (bstree-root tree))
             (left (bstree-left-branch tree))
             (right (bstree-right-branch tree)))
