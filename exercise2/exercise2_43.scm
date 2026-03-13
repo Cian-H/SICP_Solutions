@@ -6,13 +6,12 @@
 (define (safe? k positions)
   (let ((new-queen (car positions))
         (others (cdr positions)))
-    (accumulate
-      (lambda (q rest-are-safe)
-        (and rest-are-safe
+    (every
+      (lambda (q)
+        (and
           (not (= (car new-queen) (car q)))
           (not (= (abs (- (car new-queen) (car q)))
                 (abs (- (cdr new-queen) (cdr q)))))))
-      #t
       others)))
 
 (define empty-board '())
