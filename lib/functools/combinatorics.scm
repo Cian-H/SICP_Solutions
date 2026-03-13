@@ -75,3 +75,13 @@
 (define (wrap-slide l n)
   (let ((split-list (split l n)))
     (append (cdr split-list) (car split-list))))
+
+(define (interleave l x)
+  (if (null? l)
+    '()
+    (let loop ((lst (cdr l))
+               (acc (list (car l))))
+      (if (null? lst)
+        (reverse acc)
+        (loop (cdr lst)
+          (cons (car lst) (cons x acc)))))))
