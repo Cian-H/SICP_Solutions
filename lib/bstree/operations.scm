@@ -49,3 +49,21 @@
           ((pred x root) (bstree-node root pred (prune-raw left) right))
           (else (bstree-node root pred left (prune-raw right)))))))
   (list->bstree (bstree-predicate tree) (bstree->list (prune-raw tree))))
+
+(define (bstree-update tree x key-getter)
+  (let ((key-key (key-getter x))
+        (pred (bstree-predicate tree)))
+    (define (update-iter t)
+      (if (bstree-empty? t)
+        (error "Key not found in tree!")
+        (let ((root (bstree-root t))
+              (left (bstree-left-branch t))
+              (right (bstree-right-branch t)))
+          (cond
+            ((equal? key-key (key-getter root))
+              (bstree-node x pred left right))
+            ((pred x root)
+              (bstree-node root pred (update-iter left) right))
+            (else
+              (bstree-node root pred left (update-iter right)))))))
+    (update-iter tree)))
