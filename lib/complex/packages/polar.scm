@@ -13,10 +13,10 @@
 
   (define (wrap x) (type-wrap 'polar x))
 
-  (put 'from-mag-ang '(polar) (lambda (x y) (wrap (from-mag-ang x y))))
-  (put 'from-real-imag '(polar) (lambda (x y) (wrap (from-real-imag x y))))
-  (put 'real-part '(polar) real-part)
-  (put 'imag-part '(polar) imag-part)
-  (put 'magnitude '(polar) magnitude)
-  (put 'angle '(polar) angle)
+  (put 'from-mag-ang 'polar (lambda (x y) (wrap (from-mag-ang x y))))
+  (put 'from-real-imag 'polar (lambda (x y) (wrap (from-real-imag x y))))
+  (put 'real-part 'polar real-part)
+  (put 'imag-part 'polar imag-part)
+  (put 'magnitude 'polar magnitude)
+  (put 'angle 'polar angle)
   'ok)

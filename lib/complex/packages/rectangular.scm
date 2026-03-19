@@ -13,10 +13,10 @@
 
   (define (wrap x) (type-wrap 'rectangular x))
 
-  (put 'from-real-imag '(rectangular) (lambda (x y) (wrap (from-real-imag x y))))
-  (put 'from-mag-ang '(rectangular) (lambda (x y) (wrap (from-mag-ang x y))))
-  (put 'real-part '(rectangular) real-part)
-  (put 'imag-part '(rectangular) imag-part)
-  (put 'magnitude '(rectangular) magnitude)
-  (put 'angle '(rectangular) angle)
+  (put 'from-real-imag 'rectangular (lambda (x y) (wrap (from-real-imag x y))))
+  (put 'from-mag-ang 'rectangular (lambda (x y) (wrap (from-mag-ang x y))))
+  (put 'real-part 'rectangular real-part)
+  (put 'imag-part 'rectangular imag-part)
+  (put 'magnitude 'rectangular magnitude)
+  (put 'angle 'rectangular angle)
   'ok)
