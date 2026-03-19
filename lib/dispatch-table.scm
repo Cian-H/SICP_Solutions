@@ -72,29 +72,52 @@
     #f
     (iter (flatten l) *dispatch-table*)))
 
-(define (display-dispatch-table)
-  (define (print-node tree indent)
-    (if (not (bstree-empty? tree))
-      (begin
-        (print-node (bstree-left-branch tree) indent)
-        (let* ((record (bstree-root tree))
-               (key (dispatch-record-key record))
-               (val (dispatch-record-op record)))
-          (display indent)
-          (display "Key: ")
-          (display key)
-          (if (procedure? val)
-            (begin
-              (display " -> <procedure>")
-              (newline))
-            (begin
-              (display " -> [Nested Table]")
-              (newline)
-              (print-node val (string-append indent "    ")))))
-        (print-node (bstree-right-branch tree) indent))))
+(define (display-dispatch-node tree indent)
+  (if (not (bstree-empty? tree))
+    (begin
+      (display-dispatch-node (bstree-left-branch tree) indent)
+      (let* ((record (bstree-root tree))
+             (key (dispatch-record-key record))
+             (val (dispatch-record-op record)))
+        (display indent)
+        (display "Key: ")
+        (display key)
+        (if (procedure? val)
+          (begin
+            (display " -> <procedure>")
+            (newline))
+          (begin
+            (display " -> [Nested Table]")
+            (newline)
+            (display-dispatch-node val (string-append indent "    ")))))
+      (display-dispatch-node (bstree-right-branch tree) indent))))
 
-  (display "--- Dispatch Table ---")
-  (newline)
-  (print-node *dispatch-table* "")
-  (display "----------------------")
-  (newline))
+(define (display-dispatch-record-with-label r label)
+  (let* ((output-columns 80)
+         (output-bar-char #\-)
+         (make-bar (lambda (n) (make-string n output-bar-char)))
+         (spaced-label (string-append " " label " "))
+         (len (string-length spaced-label))
+         (diff (- output-columns len))
+
+         (label-bar (if (<= diff 0)
+                     spaced-label
+                     (let* ((left-pad (quotient diff 2))
+                            (right-pad (- diff left-pad)))
+                       (string-append (make-bar left-pad)
+                         spaced-label
+                         (make-bar right-pad)))))
+
+         (bar (make-bar output-columns)))
+
+    (display label-bar)
+    (newline)
+    (display-dispatch-node r "")
+    (display bar)
+    (newline)))
+
+(define (display-dispatch-record r)
+  (display-dispatch-record-with-label r "Dispatch Record"))
+
+(define (display-dispatch-table)
+  (display-dispatch-record-with-label *dispatch-table* "Dispatch Table"))
