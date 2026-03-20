@@ -1,4 +1,7 @@
 (define (install-rational-package)
+  (register-type 'rational)
+
+  ;;; Define type methods
   (define (numer x) (car x))
   (define (denom x) (cdr x))
 
@@ -44,6 +47,7 @@
 
   (define (tag x) (type-wrap 'rational x))
 
+  ;;; Register type methods
   (put 'make 'rational
     (lambda (n d) (tag (make n d))))
 
@@ -59,4 +63,16 @@
     (lambda (x y) (tag (div x y))))
   (put 'equal? 'rational 'rational equal?)
   (put 'zero? 'rational rational-zero?)
+
+  ;;; Add type coercions
+  (define (number->rational n)
+    (tag (make (type-unwrap n) 1)))
+
+  (define (rational->number n)
+    (let ((unwrapped-n (type-unwrap n)))
+      (/ (numer unwrapped-n) (denom unwrapped-n))))
+
+  (put-coercion 'number 'rational number->rational)
+  (put-coercion 'rational 'number rational->number)
+
   'ok)
