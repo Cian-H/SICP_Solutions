@@ -4,6 +4,7 @@
 (define (install-complex-package)
   (register-type 'complex)
 
+  ;;; Define type methods
   (define (from-real-imag x y)
     ((get 'from-real-imag 'rectangular) x y))
   (define (from-mag-ang r a)
@@ -33,6 +34,8 @@
   (define (equal? z1 z2) (apply-generic 'equal? z1 z2))
 
   (define (wrap z) (type-wrap 'complex z))
+
+  ;;; Register type methods
   (put 'add 'complex 'complex
     (lambda (z1 z2) (wrap (add z1 z2))))
   (put 'sub 'complex 'complex
@@ -53,18 +56,16 @@
     (lambda (z) (complex-zero? z)))
   (put 'equal? 'complex 'complex
     (lambda (z1 z2) (equal? z1 z2)))
-  (put 'equal? 'complex 'rectangular
-    (lambda (z1 z2) (apply-generic 'equal? z2 z1)))
-  (put 'equal? 'complex 'polar
-    (lambda (z1 z2) (apply-generic 'equal? z2 z1)))
-  (put 'equal? 'rectangular 'polar
-    (lambda (z1 z2)
-      (apply-generic 'equal?
-        (type-wrap 'rectangular z1)
-        (apply-generic 'to-rectangular (type-wrap 'polar z2)))))
-  (put 'equal? 'polar 'rectangular
-    (lambda (z1 z2)
-      (apply-generic 'equal?
-        (type-wrap 'rectangular z2)
-        (type-wrap 'polar z1))))
+
+  ;;; Add type coercions
+  (define (number->complex n)
+    (complex-from-real-imag (type-unwrap n) 0))
+
+  (put-coercion 'number 'complex number->complex)
+
+  (put-coercion 'polar 'rectangular
+    (lambda (z) (apply-generic 'to-rectangular z)))
+  (put-coercion 'rectangular 'polar
+    (lambda (z) (apply-generic 'to-polar z)))
+
   'ok)

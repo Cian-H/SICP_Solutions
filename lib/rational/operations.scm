@@ -1,8 +1,0 @@
-(define (rational-add x y)
-  ((get 'add 'rational 'rational) x y))
-(define (rational-sub x y)
-  ((get 'sub 'rational 'rational) x y))
-(define (rational-mul x y)
-  ((get 'mul 'rational 'rational) x y))
-(define (rational-div x y)
-  ((get 'div 'rational 'rational) x y))

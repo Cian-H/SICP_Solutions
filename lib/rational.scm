@@ -4,9 +4,6 @@
 (load "lib/math.scm")
 
 (load "lib/rational/package.scm")
-(load "lib/rational/constructors.scm")
-(load "lib/rational/accessors.scm")
-(load "lib/rational/operations.scm")
-(load "lib/rational/predicates.scm")
+(load "lib/rational/interface.scm")
 
 (install-rational-package)
