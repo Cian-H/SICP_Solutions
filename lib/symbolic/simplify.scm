@@ -44,9 +44,9 @@
 (define simplification-rules
   (list
     (list '+ simplify-accumulator-op make-sum inverse-sum + - sum? addend augend)
-    (list '- simplify-debtor-op make-sub inverse-sub - + sub? minuend subtrahend)
+    (list '- simplify-debtor-op make-sub make-sum - + sub? minuend subtrahend)
     (list '* simplify-accumulator-op make-product inverse-product * / product? multiplier multiplicand)
-    (list '/ simplify-debtor-op make-div inverse-div / * div? dividend divisor)
+    (list '/ simplify-debtor-op make-div make-product / * div? dividend divisor)
     (list '** simplify-unique-op make-exponentiation #f #f #f exponentiation? base exponent)
     (list '// simplify-unique-op make-log #f #f #f log? log-base log-val)))
 
