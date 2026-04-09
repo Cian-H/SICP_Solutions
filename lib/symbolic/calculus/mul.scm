@@ -1,0 +1,20 @@
+(define (install-mul-package)
+  (define (multiplier operands) (car operands))
+  (define (multiplicand operands) (cadr operands))
+
+  (define (make-mul x y)
+    (cond ((and (number? x) (number? y)) (* x y))
+      ((or (eq? x 0) (eq? y 0)) 0)
+      ((eq? x 1) y)
+      ((eq? y 1) x)
+      (else (type-wrap '* (list x y)))))
+
+  (define (deriv-mul operands var)
+    (let ((u (multiplier operands))
+          (v (multiplicand operands)))
+      (add (mul u (deriv v var))
+        (mul v (deriv u var)))))
+
+  (put 'deriv '* deriv-mul)
+  (put 'mul '* make-mul)
+  'ok)

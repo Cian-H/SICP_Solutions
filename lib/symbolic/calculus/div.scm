@@ -1,0 +1,20 @@
+(define (install-div-package)
+  (define (dividend operands) (car operands))
+  (define (divisor operands) (cadr operands))
+
+  (define (make-div x y)
+    (cond ((and (number? x) (number? y)) (/ x y))
+      ((eq? x 0) 0)
+      ((eq? y 1) x)
+      (else (type-wrap '/ (list x y)))))
+
+  (define (deriv-div operands var)
+    (let ((u (dividend operands))
+          (v (divisor operands)))
+      (div (sub (mul v (deriv u var))
+            (mul u (deriv v var)))
+        (mul v v))))
+
+  (put 'deriv '/ deriv-div)
+  (put 'div '/ make-div)
+  'ok)

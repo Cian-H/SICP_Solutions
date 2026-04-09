@@ -1,0 +1,9 @@
+(define (install-sum-package)
+  (if (not (get 'traits 'simplify))
+    (begin
+      (load "lib/symbolic/simplify/traits.scm")
+      (install-traits)))
+
+  (put 'simplify '+
+    ((get 'trait 'simplify 'accumulator) '+ + 0))
+  'ok)
