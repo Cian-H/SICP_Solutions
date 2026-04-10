@@ -1,11 +1,11 @@
-(define (install-mul-package)
+(define (install-symbolic/simplify/mul-package)
   (if (not (get 'traits 'simplify))
     (begin
       (load "lib/symbolic/simplify/traits.scm")
-      (install-traits)))
+      (install-symbolic/simplify-traits)))
 
   (define base-mul-simplifier
-    ((get 'trait 'simplify 'accumulator) '* * 1))
+    ((get 'trait 'simplify 'accumulator) '* '/ * 1))
 
   (define (simplify-mul lhs rhs)
     (if (or (and (number? lhs) (= lhs 0))

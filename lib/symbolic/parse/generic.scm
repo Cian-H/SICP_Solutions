@@ -2,7 +2,11 @@
   (cond
     ((null? expr) expr)
     ((number? expr) expr)
-    ((symbol? expr) expr)
+    ((symbol? expr)
+      (let ((constant-pred (get 'predicate 'constant)))
+        (if (and constant-pred (constant-pred expr))
+          ((get 'make 'constant) expr)
+          expr)))
     ((null? (cdr expr)) (parse (car expr)))
     ((pair? expr)
       (let* ((op (lowest-precedence-op expr))
@@ -44,6 +48,7 @@
 (define (unparse expr)
   (cond
     ((not (pair? expr)) expr)
+    ((eq? (type-of expr) 'constant) (car (type-unwrap expr)))
     ((= (length expr) 3)
       (let ((op (car expr))
             (lhs (cadr expr))

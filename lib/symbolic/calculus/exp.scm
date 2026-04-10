@@ -1,7 +1,7 @@
-(define (install-exp-package)
+(define (install-symbolic/calculus/exp-package)
   (if (not (get 'deriv 'ln))
     (safe-load "lib/symbolic/calculus/ln.scm"))
-  (install-ln-package)
+  (install-symbolic/calculus/ln-package)
 
   (define (base operands) (car operands))
   (define (exponent operands) (cadr operands))
@@ -22,7 +22,7 @@
           ;; Power rule: v * u^(v-1) * du/dx
           (mul (mul v (make-exp u (- v 1)))
             (deriv u var)))
-        ((eq? u 'e)
+        ((and (pair? u) (eq? (type-of u) 'constant) (eq? (car (type-unwrap u)) 'e))
           ;; Exponential rule: e^v * dv/dx
           (mul (make-exp u v) (deriv v var)))
         (else

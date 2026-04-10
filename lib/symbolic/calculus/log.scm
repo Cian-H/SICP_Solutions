@@ -1,7 +1,7 @@
-(define (install-log-package)
+(define (install-symbolic/calculus/log-package)
   (if (not (get 'deriv 'ln))
     (safe-load "lib/symbolic/calculus/ln.scm"))
-  (install-ln-package)
+  (install-symbolic/calculus/ln-package)
 
   (define (log-base operands) (car operands))
   (define (log-val operands) (cadr operands))

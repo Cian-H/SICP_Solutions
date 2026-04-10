@@ -1,8 +1,8 @@
-(define (install-div-package)
+(define (install-symbolic/simplify/div-package)
   (if (not (get 'traits 'simplify))
     (begin
       (load "lib/symbolic/simplify/traits.scm")
-      (install-traits)))
+      (install-symbolic/simplify-traits)))
 
   (define base-div-simplifier
     ((get 'trait 'simplify 'debtor) '/ '* / * 1))

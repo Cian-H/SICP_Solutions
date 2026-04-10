@@ -1,4 +1,4 @@
-(define (install-sub-package)
+(define (install-symbolic/calculus/sub-package)
   (define (minuend operands) (car operands))
   (define (subtrahend operands) (cadr operands))
 
@@ -15,5 +15,4 @@
 
   (put 'deriv '- deriv-sub)
   (put 'sub '- make-sub)
-
   'ok)

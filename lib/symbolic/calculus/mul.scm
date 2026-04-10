@@ -1,4 +1,4 @@
-(define (install-mul-package)
+(define (install-symbolic/calculus/mul-package)
   (define (multiplier operands) (car operands))
   (define (multiplicand operands) (cadr operands))
 

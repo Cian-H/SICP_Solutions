@@ -1,4 +1,4 @@
-(define (install-exp-package)
+(define (install-symbolic/simplify/exp-package)
   (define (simplify-exp lhs rhs)
     (cond
       ((and (number? lhs) (number? rhs)) (expt lhs rhs))

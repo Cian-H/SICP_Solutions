@@ -1,9 +1,10 @@
-(define (install-ln-package)
+(define (install-symbolic/calculus/ln-package)
   (define (ln-val operands) (car operands))
 
   (define (make-ln x)
-    (cond ((number? x) (log x))
-      ((eq? x 'e) 1)
+    (cond
+      ((number? x) (log x))
+      ((and (pair? x) (eq? (type-of x) 'constant) (eq? (car (type-unwrap x)) 'e)) 1)
       (else (type-wrap 'ln (list x)))))
 
   (define (deriv-ln operands var)

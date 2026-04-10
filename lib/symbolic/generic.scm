@@ -15,3 +15,13 @@
 (define exp (make-smart-constructor '** 'exp))
 (define log (make-smart-constructor '// 'log))
 (define ln (make-smart-constructor 'ln 'make))
+
+(define (evaluate-constants expr)
+  (cond
+    ((not (pair? expr)) expr)
+    ((eq? (type-of expr) 'constant)
+      (cadr (type-unwrap expr)))
+    (else
+      (let ((type (type-of expr))
+            (operands (type-unwrap expr)))
+        (simplify (type-wrap type (map evaluate-constants operands)))))))

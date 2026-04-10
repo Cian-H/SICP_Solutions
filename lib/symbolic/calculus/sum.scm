@@ -1,4 +1,4 @@
-(define (install-sum-package)
+(define (install-symbolic/calculus/sum-package)
   (define (addend operands) (car operands))
   (define (augend operands) (cadr operands))
 

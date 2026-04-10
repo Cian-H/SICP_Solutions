@@ -1,4 +1,4 @@
-(define (install-div-package)
+(define (install-symbolic/calculus/div-package)
   (define (dividend operands) (car operands))
   (define (divisor operands) (cadr operands))
 
