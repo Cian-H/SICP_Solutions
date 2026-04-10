@@ -1,7 +1,7 @@
 (define (install-symbolic/simplify/ln-package)
   (define (simplify-ln operand)
     (cond
-      ((number? operand) (log operand))
+      ((and (number? operand) (= operand 1)) 0)
       ;; Property: ln(e) -> 1
       ((and (pair? operand) (eq? (type-of operand) 'constant) (eq? (car (type-unwrap operand)) 'e)) 1)
       ;; Property: ln(e^x) -> x

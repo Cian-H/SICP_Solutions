@@ -6,6 +6,7 @@
   (load "lib/symbolic/parse/infix/exp.scm")
   (load "lib/symbolic/parse/infix/log.scm")
   (load "lib/symbolic/parse/infix/ln.scm")
+  (load "lib/symbolic/parse/infix/eq.scm")
 
   (install-symbolic/parse/infix/sum-package)
   (install-symbolic/parse/infix/sub-package)
@@ -14,6 +15,7 @@
   (install-symbolic/parse/infix/exp-package)
   (install-symbolic/parse/infix/log-package)
   (install-symbolic/parse/infix/ln-package)
+  (install-symbolic/parse/infix/eq-package)
 
   (define (lowest-precedence-op expr)
     (let* ((ops (filter (lambda (x) (and (symbol? x) (get 'precedence x))) expr))
@@ -31,6 +33,7 @@
       (cond
         ((eq? associativity 'right) (take-while (lambda (x) (not (eq? x op))) expr))
         ((eq? associativity 'left) (reverse (cdr (memq op (reverse expr)))))
+        ((eq? associativity 'unary) '()) ;; Unary has no prefix
         (else (error "Unknown associativity for prefix" op)))))
 
   (define (get-suffix op expr)
@@ -38,6 +41,7 @@
       (cond
         ((eq? associativity 'right) (cdr (memq op expr)))
         ((eq? associativity 'left) (reverse (take-while (lambda (x) (not (eq? x op))) (reverse expr))))
+        ((eq? associativity 'unary) (cdr (memq op expr))) ;; Unary sweeps everything to the right
         (else (error "Unknown associativity for suffix" op)))))
 
   (define (parse-infix expr)
@@ -52,12 +56,19 @@
       ((null? (cdr expr)) (parse-infix (car expr)))
       ((pair? expr)
         (let* ((op (lowest-precedence-op expr))
-               (constructor (get 'make op))
-               (lhs (parse-infix (get-prefix op expr)))
-               (rhs (parse-infix (get-suffix op expr))))
-          (if constructor
-            (constructor lhs rhs)
-            (type-wrap op (list lhs rhs)))))
+               (associativity (get 'associativity op))
+               (constructor (get 'make op)))
+          ;; Differentiate parser construction based on Arity
+          (if (eq? associativity 'unary)
+            (let ((rhs (parse-infix (get-suffix op expr))))
+              (if constructor
+                (constructor rhs)
+                (type-wrap op (list rhs))))
+            (let ((lhs (parse-infix (get-prefix op expr)))
+                  (rhs (parse-infix (get-suffix op expr))))
+              (if constructor
+                (constructor lhs rhs)
+                (type-wrap op (list lhs rhs)))))))
       (else expr)))
 
   (define (unparse-infix expr)

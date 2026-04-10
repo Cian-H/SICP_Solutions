@@ -1,0 +1,10 @@
+(define (install-symbolic/algebra/div-package)
+  (define (isolate-div operands rhs var)
+    (let ((a (car operands))
+          (b (cadr operands)))
+      (if (contains-var? a var)
+        (solve (list '= a (mul rhs b)) var)
+        (solve (list '= b (mul rhs a)) var))))
+
+  (put 'isolate '/ isolate-div)
+  'ok)

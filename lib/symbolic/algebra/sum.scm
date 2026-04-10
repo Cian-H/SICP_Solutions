@@ -1,0 +1,10 @@
+(define (install-symbolic/algebra/sum-package)
+  (define (isolate-sum operands rhs var)
+    (let ((a (car operands))
+          (b (cadr operands)))
+      (if (contains-var? a var)
+        (solve (list '= a (sub rhs b)) var)
+        (solve (list '= b (sub rhs a)) var))))
+
+  (put 'isolate '+ isolate-sum)
+  'ok)

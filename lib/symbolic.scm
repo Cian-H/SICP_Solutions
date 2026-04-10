@@ -9,12 +9,14 @@
   (load "lib/symbolic/parse.scm")
   (load "lib/symbolic/simplify.scm")
   (load "lib/symbolic/calculus.scm")
+  (load "lib/symbolic/algebra.scm")
   (load "lib/symbolic/compile.scm")
 
   (install-symbolic/constants-package)
   (install-symbolic/parse-package)
   (install-symbolic/simplify-package)
   (install-symbolic/calculus-package)
+  (install-symbolic/algebra-package)
   (install-symbolic/compile-package)
 
   'ok)

@@ -1,0 +1,10 @@
+(define (install-symbolic/algebra/mul-package)
+  (define (isolate-mul operands rhs var)
+    (let ((a (car operands))
+          (b (cadr operands)))
+      (if (contains-var? a var)
+        (solve (list '= a (div rhs b)) var)
+        (solve (list '= b (div rhs a)) var))))
+
+  (put 'isolate '* isolate-mul)
+  'ok)

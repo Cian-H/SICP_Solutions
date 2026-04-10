@@ -1,7 +1,6 @@
 (define (install-symbolic/simplify/log-package)
   (define (simplify-log lhs rhs)
     (cond
-      ((and (number? lhs) (number? rhs)) (/ (log rhs) (log lhs)))
       ((and (number? rhs) (= rhs 1)) 0)
       ((equal? lhs rhs) 1)
       ;; Property: log(b, x^y) -> y * log(b, x)

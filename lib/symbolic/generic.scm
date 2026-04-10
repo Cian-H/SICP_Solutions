@@ -25,3 +25,22 @@
       (let ((type (type-of expr))
             (operands (type-unwrap expr)))
         (simplify (type-wrap type (map evaluate-constants operands)))))))
+
+(define (substitute expr var val)
+  (cond
+    ((eq? expr var) val)
+    ((not (pair? expr)) expr)
+    ((eq? (type-of expr) 'constant) expr)
+    (else
+      (let ((type (type-of expr))
+            (operands (type-unwrap expr)))
+        (simplify
+          (type-wrap type
+            (map (lambda (child)
+                  (substitute child var val))
+              operands)))))))
+
+(define-syntax math
+  (syntax-rules ()
+    ((_ expr ...)
+      (parse '(expr ...)))))
