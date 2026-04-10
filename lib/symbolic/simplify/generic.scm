@@ -18,7 +18,7 @@
     (cond
       ((< score-a score-b) #t)
       ((> score-a score-b) #f)
-      ((number? a) (< a b))
+      ((number? a) (> a b)) ; Polynomials should be ordered in order of descending degree
       ((symbol? a) (string<? (symbol->string a) (symbol->string b)))
       ((and (pair? a) (eq? (type-of a) 'constant))
         (string<? (symbol->string (car (type-unwrap a))) (symbol->string (car (type-unwrap b)))))
