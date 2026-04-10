@@ -13,6 +13,11 @@
     (make-sub (deriv (minuend operands) var)
       (deriv (subtrahend operands) var)))
 
+  (define (integrate-sub operands var)
+    (make-sub (integrate (minuend operands) var)
+      (integrate (subtrahend operands) var)))
+
   (put 'deriv '- deriv-sub)
+  (put 'integrate '- integrate-sub)
   (put 'sub '- make-sub)
   'ok)

@@ -13,7 +13,12 @@
     (make-sum (deriv (addend operands) var)
       (deriv (augend operands) var)))
 
+  (define (integrate-sum operands var)
+    (make-sum (integrate (addend operands) var)
+      (integrate (augend operands) var)))
+
   (put 'deriv '+ deriv-sum)
+  (put 'integrate '+ integrate-sum)
   (put 'add '+ make-sum)
 
   'ok)

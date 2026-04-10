@@ -31,6 +31,22 @@
             (add (mul (deriv v var) (ln u))
               (mul v (div (deriv u var) u))))))))
 
+  (define (integrate-exp operands var)
+    (let ((u (base operands))
+          (v (exponent operands)))
+      (cond
+        ;; Power rule: Integral of x^n -> (x^(n+1)) / (n+1)
+        ((and (eq? u var) (number? v))
+          (if (= v -1)
+            (ln u) ;; Special case: Integral of x^-1 is ln(x)
+            (let ((new-exp (+ v 1)))
+              (div (make-exp u new-exp) new-exp))))
+        ;; Exponential rule: Integral of e^x -> e^x
+        ((and (pair? u) (eq? (type-of u) 'constant) (eq? (car (type-unwrap u)) 'e) (eq? v var))
+          (make-exp u v))
+        (else (list 'integral (type-wrap '** operands) 'd var)))))
+
   (put 'deriv '** deriv-exp)
+  (put 'integrate '** integrate-exp)
   (put 'exp '** make-exp)
   'ok)
